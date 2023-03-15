@@ -44,6 +44,7 @@ our $do_fissile;
 our $do_helm;
 our $do_flatpak;
 our $do_mkosi;
+our $do_linglong;
 
 sub import {
   for (@_) {
@@ -60,8 +61,9 @@ sub import {
     $do_helm = 1 if $_ eq ':helm';
     $do_flatpak = 1 if $_ eq ':flatpak';
     $do_mkosi = 1 if $_ eq ':mkosi';
+    $do_linglong = 1 if $_ eq ':linglong';
   }
-  $do_rpm = $do_deb = $do_kiwi = $do_arch = $do_collax = $do_livebuild = $do_snapcraft = $do_appimage = $do_docker = $do_fissile = $do_helm = $do_flatpak = $do_mkosi = 1 if !$do_rpm && !$do_deb && !$do_kiwi && !$do_arch && !$do_collax && !$do_livebuild && !$do_snapcraft && !$do_appimage && !$do_docker && !$do_fissile && !$do_helm && !$do_flatpak && !$do_mkosi;
+  $do_rpm = $do_deb = $do_kiwi = $do_arch = $do_collax = $do_livebuild = $do_snapcraft = $do_appimage = $do_docker = $do_fissile = $do_helm = $do_flatpak = $do_mkosi = $do_linglong = 1 if !$do_rpm && !$do_deb && !$do_kiwi && !$do_arch && !$do_collax && !$do_livebuild && !$do_snapcraft && !$do_appimage && !$do_docker && !$do_fissile && !$do_helm && !$do_flatpak && !$do_mkosi && !$do_linglong;
 
   if ($do_deb) {
     require Build::Deb;
@@ -98,6 +100,9 @@ sub import {
   }
   if ($do_mkosi) {
     require Build::Mkosi;
+  }
+  if ($do_linglong) {
+    require Build::Linglong;
   }
 }
 
@@ -1274,6 +1279,7 @@ sub recipe2buildtype {
   return 'dsc' if $recipe eq 'debian.control';
   return 'dsc' if $recipe eq 'control' && $_[0] =~ /(?:^|\/)debian\/[^\/]+$/s;
   return 'mkosi' if $recipe =~ m/^mkosi\./;
+  return 'linglong' if $recipe eq 'linglong.yaml';
   return undef;
 }
 
@@ -1337,6 +1343,7 @@ sub parse_typed {
   return Build::Helm::parse($cf, $fn, @args) if $buildtype eq 'helm';
   return Build::Flatpak::parse($cf, $fn, @args) if $buildtype eq 'flatpak';
   return Build::Mkosi::parse($cf, $fn, @args) if $do_mkosi && $buildtype eq 'mkosi';
+  return Build::Linglong::parse($cf, $fn, @args) if $do_linglong && $buildtype eq 'linglong';
   return undef;
 }
 

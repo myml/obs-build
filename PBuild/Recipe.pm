@@ -38,6 +38,7 @@ sub find_recipe {
   return $files{'simpleimage'} if $files{'simpleimage'};
   return $files{'snapcraft.yaml'} if $type eq 'snapcraft' && $files{'snapcraft.yaml'};
   return $files{'appimage.yml'} if $type eq 'appimage' && $files{'appimage.yml'};
+  return $files{'linglong.yaml'} if $type eq 'linglong' && $files{'linglong.yaml'};
   return $files{'Dockerfile'} if $type eq 'docker' && $files{'Dockerfile'};
   return $files{'fissile.yml'} if $type eq 'fissile' && $files{'fissile.yml'};
   return $files{'Chart.yaml'} if $type eq 'helm' && $files{'Chart.yaml'};
@@ -203,7 +204,7 @@ sub looks_like_packagedir {
   for my $file (@files) {
     return 1 if $file =~ /\.(?:spec|dsc|kiwi)$/;
     return 1 if $file =~ /^mkosi\./;
-    return 1 if $file eq 'snapcraft.yaml' || $file eq 'appimage.yml';
+    return 1 if $file eq 'snapcraft.yaml' || $file eq 'appimage.yml' || $file eq 'linglong.yaml';
     return 1 if $file eq 'Dockerfile' || $file eq 'fissile.yml' || $file eq 'Chart.yml';
     return 1 if $file eq 'PKGBUILD';
   }
